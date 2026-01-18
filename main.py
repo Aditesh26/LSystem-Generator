@@ -21,9 +21,37 @@ t = turtle.RawTurtle(screen)
 t.speed(0)
 t.left(90)
 
+def generate():
+    t.clear()
+    t.penup()
+    t.home()
+    t.heading(90)
+    t.pendown()
+
+    rules = {
+        "X": "F[+X][-X]FX",
+        "F": "FF"
+    }
+
+    axiom = "X"
+    iterations = 4
+    angle = 25
+    steps = 5
+    s = expand_lsystem(axiom, rules, iterations)
+    draw(t, s, angle, steps)
+    
+    screen.update()
+
+
+generate_btn = tk.Button(
+    controls_frame,
+    text="Generate",
+    command= generate()
+)
+generate_btn.pack(pady=20)
+
 
 root.mainloop()
-
 
 t = turtle.Turtle()
 t.speed(10)
@@ -38,10 +66,7 @@ def expand_lsystem(axiom, rules, iterations):
                 next_string += symbol
         current = next_string
     return current
-rules = {
-    "X": "F[+X][-X]FX",
-    "F": "FF"
-}
+
 print(expand_lsystem("F", rules, 2))
 
 def draw(t, instructions, angle, steps = 5):
@@ -63,6 +88,8 @@ def draw(t, instructions, angle, steps = 5):
             t.setposition(position)
             t.setheading(heading)
             t.pendown()
+
+
 
 t.left(90)
 s = expand_lsystem("X", rules, 4)
