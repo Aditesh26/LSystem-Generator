@@ -56,6 +56,7 @@ def draw(t, instructions, angle, steps = 5):
             t.setposition(position)
             t.setheading(heading)
             t.pendown()
+            depth-=1
         t.pencolor(0, max(0.3, 1 - depth * 0.1), 0)
 
 
