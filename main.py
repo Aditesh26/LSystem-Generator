@@ -1,4 +1,29 @@
 import turtle
+import tkinter as tk
+
+root = tk.Tk()
+root.title("L-System Fractal Tree")
+
+
+controls_frame = tk.Frame(root,width = 300)
+controls_frame.pack(side=tk.LEFT, fill=tk.Y)
+
+canvas_frame = tk.Frame(root)
+canvas_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+canvas = tk.Canvas(canvas_frame,width = 800,height = 600, bg="white")
+canvas.pack(fill=tk.BOTH, expand=True)
+
+screen = turtle.TurtleScreen(canvas)
+screen.tracer(0,0)
+
+t = turtle.RawTurtle(screen)
+t.speed(0)
+t.left(90)
+
+
+root.mainloop()
+
 
 t = turtle.Turtle()
 t.speed(10)
@@ -42,4 +67,5 @@ def draw(t, instructions, angle, steps = 5):
 t.left(90)
 s = expand_lsystem("X", rules, 4)
 draw(t, s, 25,10)
-turtle.done()
+
+
