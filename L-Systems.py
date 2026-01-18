@@ -11,7 +11,7 @@ controls_frame.pack(side=tk.LEFT, fill=tk.Y)
 canvas_frame = tk.Frame(root)
 canvas_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-canvas = tk.Canvas(canvas_frame,width = 800,height = 600, bg="white")
+canvas = tk.Canvas(canvas_frame,width = 800,height = 1000, bg="white")
 canvas.pack(fill=tk.BOTH, expand=True)
 
 screen = turtle.TurtleScreen(canvas)
@@ -20,6 +20,7 @@ screen.tracer(0,0)
 t = turtle.RawTurtle(screen)
 t.speed(0)
 t.left(90)
+t.home()
 
 def expand_lsystem(axiom, rules, iterations):
     current = axiom
@@ -64,7 +65,6 @@ def draw(t, instructions, angle, steps = 5):
 def generate():
     t.clear()
     t.penup()
-    t.home()
     t.setheading(90)
     t.pendown()
 
@@ -78,6 +78,12 @@ def generate():
         iterations = int(iter_entry.get())
         angle = float(angle_entry.get())
         steps = int(step_entry.get())
+        rules = {}
+        rules_input = rules_text.get("1.0", tk.END).strip().split("\n")
+        for line in rules_input:
+            if line:
+                key, value = line.split(":")
+                rules[key.strip()] = value.strip()
     except ValueError:
         print("Invalid input")
         return
@@ -98,8 +104,19 @@ def reset():
     t.pendown()
     screen.update()
     
+def goto_center():
+    t.penup()
+    t.home()
+    t.setheading(90)
+    t.pendown()
+    screen.update()
 
-
+def goto_bottom():
+    t.penup()
+    t.goto(0, -450)
+    t.setheading(90)
+    t.pendown()
+    screen.update()
 
 tk.Label(controls_frame, text="Axiom").pack(pady=(10, 0))
 axiom_entry = tk.Entry(controls_frame)
@@ -135,7 +152,6 @@ rules_text.insert(
 )
 
 
-
 generate_btn = tk.Button(
     controls_frame,
     text="Generate",
@@ -149,5 +165,20 @@ reset_btn = tk.Button(
     command= reset
 )
 reset_btn.pack(pady=10)
+
+
+home_btn = tk.Button(
+    controls_frame,
+    text="Go to Center",
+    command= goto_center
+)
+home_btn.pack(pady=10)
+
+bottom_btn = tk.Button(
+    controls_frame,
+    text="Go to Bottom",
+    command= goto_bottom
+)
+bottom_btn.pack(pady=10)
 
 root.mainloop()
