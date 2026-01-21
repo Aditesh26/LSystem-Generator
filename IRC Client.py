@@ -36,14 +36,14 @@ def user_input():
     while True:
         msg = input()
         if msg.startswith("/quit"):
-            send("quit: client exiting")
+            send("QUIT :client exiting")
             state["connected"] = False
             sock.close()
             break
         elif msg.startswith("/join"):
             parts = msg.split()
             if len(parts) == 2:
-                channel = parts[1]
+                channel = parts[1].strip()
                 send(f"JOIN {channel}")
                 state["channel"] = channel
 
@@ -52,7 +52,7 @@ def user_input():
 
         else:
             if state["channel"]:
-                send(f"privmsg {state['channel']}:{msg}")
+                send(f"PRIVMSG {state['channel']} :{msg}")
             else:
                 print("You are not connected to a channel")
 
@@ -63,7 +63,11 @@ def user_input():
 threading.Thread(target=user_input, daemon=True).start()
 reg = False
 while state["connected"]:
-    data = sock.recv(4096)
+    try:
+        data = sock.recv(4096)
+    except (ConnectionAbortedError, OSError):
+        print("Connection closed")
+        break
     data = data.decode("utf-8", "ignore")
     if not data:
         state["connected"] = False
@@ -75,5 +79,14 @@ while state["connected"]:
         response = data.replace("PING","PONG")
         send(response.strip())
 
+    if " 001 " in data and not reg:
+        print("Registered with server")
+        reg = True
 
+    if "PRIVMSG" in data:
+        prefix, message = data.split("PRIVMSG", 1)
 
+        sender = prefix.split("!")[0][1:]
+        target, text = message.split(" :", 1)
+
+        print(f"<{sender}> {text.strip()}")
