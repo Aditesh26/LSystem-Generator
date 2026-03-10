@@ -11,16 +11,18 @@ controls_frame.pack(side=tk.LEFT, fill=tk.Y)
 canvas_frame = tk.Frame(root)
 canvas_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-canvas = tk.Canvas(canvas_frame,width = 800,height = 1000, bg="white")
+canvas = tk.Canvas(canvas_frame,width = 800,height = 500, bg="white")
 canvas.pack(fill=tk.BOTH, expand=True)
 
 screen = turtle.TurtleScreen(canvas)
 screen.tracer(0,0)
 
 t = turtle.RawTurtle(screen)
+t.home()
 t.speed(0)
 t.left(90)
-t.home()
+
+screen.update()
 
 def expand_lsystem(axiom, rules, iterations):
     current = axiom
